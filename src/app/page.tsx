@@ -13,18 +13,20 @@ export default function Home() {
     }
   }, []);
 
+  const guardar = (lista: string[]) => {
+    setAprendizajes(lista);
+    localStorage.setItem("aprendizajes", JSON.stringify(lista));
+  };
+
   const agregar = () => {
     if (!nuevo.trim()) return;
 
-    const actualizados = [...aprendizajes, nuevo];
-
-    setAprendizajes(actualizados);
-    localStorage.setItem(
-      "aprendizajes",
-      JSON.stringify(actualizados)
-    );
-
+    guardar([...aprendizajes, nuevo]);
     setNuevo("");
+  };
+
+  const eliminar = (index: number) => {
+    guardar(aprendizajes.filter((_, i) => i !== index));
   };
 
   return (
@@ -70,8 +72,18 @@ export default function Home() {
 
           <ul className="space-y-2">
             {aprendizajes.map((item, index) => (
-              <li key={index}>
-                ✅ {item}
+              <li
+                key={index}
+                className="flex justify-between items-center border rounded p-2 bg-white"
+              >
+                <span>✅ {item}</span>
+
+                <button
+                  onClick={() => eliminar(index)}
+                  className="text-red-600 font-bold"
+                >
+                  X
+                </button>
               </li>
             ))}
           </ul>
